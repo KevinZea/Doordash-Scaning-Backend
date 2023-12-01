@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', getPedidos)
 router.get('/:id', getPedido)
-router.post('/upload', upload.single('image'), uploadImage);
+router.post('/upload', upload.any(), uploadImage);
 router.post('/create', createPedido)
 router.delete('/delete/:id', deletePedido)
 router.put('/update/:id', updatePedido)

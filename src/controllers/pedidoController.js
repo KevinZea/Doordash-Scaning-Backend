@@ -8,14 +8,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const dataPath = path.resolve(__dirname, '../Data.json');
 
-const worker = await createWorker('eng');
 
 export async function uploadImage(req, res) {
     // Iniciar el trabajador de Tesseract
+    const worker = await createWorker('eng');
 
     // Procesar la imagen y extraer el texto
     try {
-        const { data: { text } } = await worker.recognize(req.file.path);
+        const { data: { text } } = await worker.recognize(req.files[0].path);
         const lines = text.split('\n'); // Dividir el texto en líneas
         res.json(lines); // Devolver las líneas como un arreglo
     } catch (error) {
@@ -26,25 +26,25 @@ export async function uploadImage(req, res) {
     await worker.terminate();
 }
 
-export async function createPedido(req, res){
+export async function createPedido(req, res) {
     try {
-        const {name, pedido, restaurant} = req.body
+        const { name, pedido, restaurant } = req.body
         const data = await fs.readFile(dataPath);
         let dataNew = await JSON.parse(data);
-        let pedidoNuevo = {name, pedido, restaurant, status: false,}
+        let pedidoNuevo = { name, pedido, restaurant, status: false, }
         let id = 0
-        if (dataNew.length > 0){
+        if (dataNew.length > 0) {
             for (const i of dataNew) {
-                if(i.id > id){
+                if (i.id > id) {
                     id = i.id
                 }
             }
             id += 1
         }
-        else{
+        else {
             id = 1
         }
-        pedidoNuevo = {...pedidoNuevo, id}
+        pedidoNuevo = { ...pedidoNuevo, id }
         dataNew.push(pedidoNuevo)
         const json = JSON.stringify(dataNew, null, 2)
         await fs.writeFile(dataPath, json, 'utf-8')
