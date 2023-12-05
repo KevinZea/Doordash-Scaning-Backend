@@ -6,9 +6,9 @@ import fs from 'fs/promises';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const dataPath = path.resolve(__dirname, '../Data.json');
-const worker = await createWorker('eng');
 export async function uploadImage(req, res) {
   // Iniciar el trabajador de Tesseract
+  const worker = await createWorker('eng');
 
   // Procesar la imagen y extraer el texto
   try {
@@ -16,7 +16,7 @@ export async function uploadImage(req, res) {
       data: {
         text
       }
-    } = await worker.recognize(req.file.path);
+    } = await worker.recognize(req.files[0].path);
     const lines = text.split('\n'); // Dividir el texto en líneas
     res.json(lines); // Devolver las líneas como un arreglo
   } catch (error) {
