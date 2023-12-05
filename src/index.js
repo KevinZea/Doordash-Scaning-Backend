@@ -1,9 +1,13 @@
 import app from "./app.js";
 
-const port = 4000
+// Usa el PORT proporcionado en el entorno o por defecto a 4000
+const port = process.env.PORT || 4000;
+
 async function main() {
-    app.listen(port);
-    console.log("Server on port", port);
+    // Escucha en `port` y 0.0.0.0
+    app.listen(port, "0.0.0.0", function () {
+        console.log("Server on port", port);
+    });
 }
 
 main();
